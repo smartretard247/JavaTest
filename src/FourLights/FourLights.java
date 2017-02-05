@@ -6,6 +6,7 @@ import javax.swing.*;
 import com.jogamp.opengl.*;
 
 import Classes.JOGL.Camera;
+import Classes.JOGL.Primitives;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.gl2.GLUT; 
 
@@ -36,22 +37,22 @@ public class FourLights extends JPanel implements GLEventListener {
 
     private JCheckBox animating;  // Checked if animation is running.
 
-    private JCheckBox viewpointLight;  // Checked if the white viewpoint light is on.
-    private JCheckBox redLight;  // Checked if the red light is on.
-    private JCheckBox greenLight;  // Checked if the green light is on.
-    private JCheckBox blueLight;  // Checked if the blue light is on.
-    private JCheckBox ambientLight;  // Checked if the global ambient light is on.
+    private final JCheckBox viewpointLight;  // Checked if the white viewpoint light is on.
+    private final JCheckBox redLight;  // Checked if the red light is on.
+    private final JCheckBox greenLight;  // Checked if the green light is on.
+    private final JCheckBox blueLight;  // Checked if the blue light is on.
+    private final JCheckBox ambientLight;  // Checked if the global ambient light is on.
     
-    private JCheckBox drawBase; // Checked if the base should be drawn.
+    private final JCheckBox drawBase; // Checked if the base should be drawn.
 
     private GLJPanel display;
     private Timer animationTimer;
 
     private int frameNumber = 0;  // The current frame number for an animation.
 
-    private Camera camera;
+    private final Camera camera;
 
-    private GLUT glut = new GLUT();
+    private final GLUT glut = new GLUT();
 
     /**
      * The constructor adds seven checkboxes under the display, to control the options.
@@ -67,26 +68,22 @@ public class FourLights extends JPanel implements GLEventListener {
         camera.lookAt(5,10,30, 0,0,0, 0,1,0);
         camera.setScale(15);
         camera.installTrackball(display);
-        animationTimer = new Timer(30, new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                frameNumber++;
-                display.repaint();
-            }
+        animationTimer = new Timer(30, (ActionEvent evt) -> {
+          frameNumber++;
+          display.repaint();
         });
-        ActionListener boxHandler = new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                if (evt.getSource() == animating) {
-                    if (animating.isSelected()) {
-                        animationTimer.start();
-                    }
-                    else {
-                        animationTimer.stop();
-                    }
-                }
-                else {
-                    display.repaint();
-                }
+        ActionListener boxHandler = (ActionEvent evt) -> {
+          if (evt.getSource() == animating) {
+            if (animating.isSelected()) {
+              animationTimer.start();
             }
+            else {
+              animationTimer.stop();
+            }
+          }
+          else {
+            display.repaint();
+          }
         };
         viewpointLight = new JCheckBox("Viewpoint Light", true);
         redLight = new JCheckBox("Red Light", true);
@@ -246,7 +243,9 @@ public class FourLights extends JPanel implements GLEventListener {
 
     /**
      * Draws the scene.
+   * @param drawable
      */
+    @Override
     public void display(GLAutoDrawable drawable) {    
         // called when the panel needs to be drawn
 
@@ -286,11 +285,15 @@ public class FourLights extends JPanel implements GLEventListener {
         gl.glPushMatrix();
         glut.glutSolidTeapot(6);
         gl.glPopMatrix();
+        
+        Primitives.drawRectangle(gl, 20, 10);
     }
 
     /**
      * Initialization, including setting up a camera and configuring the four lights.
+   * @param drawable
      */
+    @Override
     public void init(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
         gl.glClearColor(0, 0, 0, 1);  
@@ -327,13 +330,21 @@ public class FourLights extends JPanel implements GLEventListener {
 
     /**
      * Called when the size of the GLJPanel changes.
+   * @param drawable
+   * @param x
+   * @param y
+   * @param width
+   * @param height
      */
+    @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
     }
 
     /**
      * This is called before the GLJPanel is destroyed. 
+   * @param drawable
      */
+    @Override
     public void dispose(GLAutoDrawable drawable) {
     }
 
