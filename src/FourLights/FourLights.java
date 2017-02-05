@@ -6,7 +6,7 @@ import javax.swing.*;
 import com.jogamp.opengl.*;
 
 import Classes.JOGL.Camera;
-import Classes.JOGL.Primitives;
+import Classes.JOGL.TexturedShapes;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.gl2.GLUT; 
 
@@ -286,7 +286,10 @@ public class FourLights extends JPanel implements GLEventListener {
         glut.glutSolidTeapot(6);
         gl.glPopMatrix();
         
-        Primitives.drawRectangle(gl, 20, 10);
+        gl.glPushMatrix();
+        gl.glScaled(20, 10, 1);
+        TexturedShapes.cube(gl);
+        gl.glPopMatrix();
     }
 
     /**
