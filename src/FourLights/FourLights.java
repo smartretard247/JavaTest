@@ -13,15 +13,15 @@ import com.jogamp.opengl.util.gl2.GLUT;
 /**
  *  Shows a scene (a teapot on a short cylindrical base) that is illuminated
  *  by up to four lights plus global ambient light.  The user can turn the
- *  lights on and off.  The global ambient light is a dim white.  There is 
- *  a white "viewpoint" light that points from the direction of the viewer
- *  into the scene.  There is a red light, a blue light, and a green light
- *  that rotate in circles above the teapot.  (The user can turn the animation
- *  on and off.)  The locations of the colored lights are marked by spheres,
- *  which are gray when the light is off and are colored by some emission color
- *  when the light is on.  The teapot is gray with weak specular highlights.
- *  The base is colored with a spectrum.  (The user can turn the display of
- *  the base on and off.) The mouse can be used to rotate the scene.
+  lights on and off.  The global ambient light is a dim white.  There is 
+  a white "viewpoint" light that points from the direction of the viewer
+  into the scene.  There is a red light, a yellow light, and a green light
+  that rotate in circles above the teapot.  (The user can turn the animation
+  on and off.)  The locations of the colored lights are marked by spheres,
+  which are gray when the light is off and are colored by some emission color
+  when the light is on.  The teapot is gray with weak specular highlights.
+  The base is colored with a spectrum.  (The user can turn the display of
+  the base on and off.) The mouse can be used to rotate the scene.
  */
 public class FourLights extends JPanel implements GLEventListener {
 
@@ -40,7 +40,7 @@ public class FourLights extends JPanel implements GLEventListener {
     private final JCheckBox viewpointLight;  // Checked if the white viewpoint light is on.
     private final JCheckBox redLight;  // Checked if the red light is on.
     private final JCheckBox greenLight;  // Checked if the green light is on.
-    private final JCheckBox blueLight;  // Checked if the blue light is on.
+    private final JCheckBox yellowLight;  // Checked if the yellow light is on.
     private final JCheckBox ambientLight;  // Checked if the global ambient light is on.
     
     private final JCheckBox drawBase; // Checked if the base should be drawn.
@@ -87,7 +87,7 @@ public class FourLights extends JPanel implements GLEventListener {
         };
         viewpointLight = new JCheckBox("Viewpoint Light", true);
         redLight = new JCheckBox("Red Light", true);
-        blueLight = new JCheckBox("Blue Light", true);
+        yellowLight = new JCheckBox("Blue Light", true);
         greenLight = new JCheckBox("Green Light", true);
         ambientLight = new JCheckBox("Global Ambient Light", true);
         animating = new JCheckBox("Animate", true);
@@ -96,7 +96,7 @@ public class FourLights extends JPanel implements GLEventListener {
         ambientLight.addActionListener(boxHandler);
         redLight.addActionListener(boxHandler);
         greenLight.addActionListener(boxHandler);
-        blueLight.addActionListener(boxHandler);
+        yellowLight.addActionListener(boxHandler);
         animating.addActionListener(boxHandler);
         drawBase.addActionListener(boxHandler);
         JPanel bottom = new JPanel();
@@ -110,7 +110,7 @@ public class FourLights extends JPanel implements GLEventListener {
         row2.add(viewpointLight);
         row2.add(redLight);
         row2.add(greenLight);
-        row2.add(blueLight);
+        row2.add(yellowLight);
         bottom.add(row2);
         add(bottom,BorderLayout.SOUTH);
         animationTimer.setInitialDelay(500);
@@ -121,7 +121,7 @@ public class FourLights extends JPanel implements GLEventListener {
 
     /**
      *  Sets the positions of the colored lights and turns them on and off, depending on
-     *  the state of the redLight, greenLight, and blueLight options.  Draws a small
+  the state of the redLight, greenLight, and yellowLight options.  Draws a small
      *  sphere at the location of each light.
      */
     private void lights(GL2 gl) {
@@ -136,7 +136,7 @@ public class FourLights extends JPanel implements GLEventListener {
             gl.glDisable(GL2.GL_LIGHT0);
         
         if (redLight.isSelected()) {
-            float red[] = { 0.5F, 0, 0, 1 };
+            float red[] = { 0.7F, 0, 0, 1 }; // stronger red color for sphere
             gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_EMISSION, red, 0);  
             gl.glEnable(GL2.GL_LIGHT1);
         }
@@ -146,7 +146,7 @@ public class FourLights extends JPanel implements GLEventListener {
         }
         gl.glPushMatrix();
         gl.glRotated(-frameNumber, 0, 1, 0);
-        gl.glTranslated(10, 7, 0);
+        gl.glTranslated(10, -5, 0); // altered to be below object
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, zero, 0);
         glut.glutSolidSphere(0.5, 16, 8);
         gl.glPopMatrix();
@@ -161,15 +161,15 @@ public class FourLights extends JPanel implements GLEventListener {
             gl.glDisable(GL2.GL_LIGHT2);
         }
         gl.glPushMatrix();
-        gl.glRotated((frameNumber+100)*0.8743, 0, 1, 0);
-        gl.glTranslated(9, 8, 0);
+        gl.glRotated((frameNumber+100)*1.8743, 1, 0, 0); // navigate around x-axis, and faster
+        gl.glTranslated(0, 8, 0); // keep the light centered
         gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_POSITION, zero, 0);
         glut.glutSolidSphere(0.5, 16, 8);
         gl.glPopMatrix();
         
-        if (blueLight.isSelected()) {
-            float blue[] = { 0, 0, 0.5F, 1 };
-            gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_EMISSION, blue, 0); 
+        if (yellowLight.isSelected()) {
+            float[] yellow = { 0.7F, 0.7F, 0.0F, 1 }; // changed sphere to yellow
+            gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_EMISSION, yellow, 0); 
             gl.glEnable(GL2.GL_LIGHT3);
         }
         else {
@@ -177,8 +177,8 @@ public class FourLights extends JPanel implements GLEventListener {
             gl.glDisable(GL2.GL_LIGHT3);
         }
         gl.glPushMatrix();
-        gl.glRotated((frameNumber-100)*1.3057, 0, 1, 0);
-        gl.glTranslated(9.5, 7.5, 0);
+        gl.glRotated((frameNumber-100)*1.3057, 0, 1, 1); // navigate diagonal axis
+        gl.glTranslated(0, 5, 0);
         gl.glLightfv(GL2.GL_LIGHT3, GL2.GL_POSITION, zero, 0);
         glut.glutSolidSphere(0.5, 16, 8);
         gl.glPopMatrix();
@@ -247,49 +247,70 @@ public class FourLights extends JPanel implements GLEventListener {
      */
     @Override
     public void display(GLAutoDrawable drawable) {    
-        // called when the panel needs to be drawn
+      // called when the panel needs to be drawn
+      GL2 gl = drawable.getGL().getGL2();
 
-        GL2 gl = drawable.getGL().getGL2();
+      gl.glClearColor(0,0,0,0);
+      gl.glClear( GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT ); 
 
-        gl.glClearColor(0,0,0,0);
-        gl.glClear( GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT ); 
+      camera.apply(gl);
 
-        camera.apply(gl);
+      lights(gl);
 
-        lights(gl);
+      float zero[] = { 0, 0, 0, 1 };
 
-        float zero[] = { 0, 0, 0, 1 };
+      if (ambientLight.isSelected()) {
+          gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, new float[] { 0.15F, 0.15F, 0.15F, 1 }, 0 );
+      }
+      else {
+          gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, zero, 0 );
+      }
 
-        if (ambientLight.isSelected()) {
-            gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, new float[] { 0.15F, 0.15F, 0.15F, 1 }, 0 );
-        }
-        else {
-            gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, zero, 0 );
-        }
+      if (drawBase.isSelected()) {
+          gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, zero, 0 );
 
-        if (drawBase.isSelected()) {
-            gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, zero, 0 );
-    
-            gl.glPushMatrix();
-            gl.glTranslated(0, -5, 0);
-            gl.glRotated(-90, 1, 0, 0);
-            gl.glScaled(10,10,0.5);
-            drawCylinder(gl);
-            gl.glPopMatrix();
-        }
+          gl.glPushMatrix();
+          gl.glTranslated(0, -5, 0);
+          gl.glRotated(-90, 1, 0, 0);
+          gl.glScaled(10,10,0.5);
+          drawCylinder(gl);
+          gl.glPopMatrix();
+      }
 
-        gl.glColor3d(0.7,0.7,0.7);  // sets diffuse and ambient color for teapot
+      gl.glColor3d(0.7,0.7,0.7);  // sets diffuse and ambient color for teapot
 
-        gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, new float[] {0.2F, 0.2F, 0.2F, 1 }, 0);
+      gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, new float[] {0.2F, 0.2F, 0.2F, 1 }, 0);
 
+      // draw one object at origin
+      gl.glPushMatrix();
+      gl.glTranslated(0, -1.5, 0);
+      gl.glScaled(3, 3, 3);
+      glut.glutSolidOctahedron();
+      gl.glPopMatrix();
+
+      // draw layered object, rising, twisting and expanding in location
+      int signX = 1;
+      int signZ = -1;
+      for(int a = 0; a < 2; a++) { // draw the rotated set of objects
         gl.glPushMatrix();
-        glut.glutSolidTeapot(6);
+        gl.glTranslated(0, a-1, 0);
+        gl.glRotated(a*45, 0, 1, 0); // first will not be rotated, second rotated 45 degrees
+        for(int layer = 1; layer < 5; layer++) { // for elevation
+          for(int o = 0; o < 2; o++) { // o = outer loop*2 times, for x position
+            signX *= -1; // alternate pos/neg
+            for(int i = 0; i < 2; i++) { // i = inner loop*2 times, for z position
+              signZ *= -1; // alternate pos/neg
+              gl.glPushMatrix();
+              gl.glTranslated(layer*2*signX, layer, layer*2*signZ); // draw at expanding locations
+              gl.glScaled(1.5, 1.5, 1.5);
+              glut.glutSolidOctahedron();
+              gl.glPopMatrix();
+            }
+          }
+        }
         gl.glPopMatrix();
-        
-        gl.glPushMatrix();
-        gl.glScaled(20, 10, 1);
-        TexturedShapes.cube(gl);
-        gl.glPopMatrix();
+      }
+      
     }
 
     /**
@@ -312,8 +333,8 @@ public class FourLights extends JPanel implements GLEventListener {
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, dim, 0);
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, dim, 0);
 
-        float red[] =  { 0.5F, 0, 0, 1};
-        float reda[] = { 0.1F, 0, 0, 1};
+        float red[] =  { 0.7F, 0, 0, 1}; // stronger red light
+        float reda[] = { 0.2F, 0, 0, 1}; // stronger ambient red
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_AMBIENT, reda, 0);
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, red, 0);
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_SPECULAR, red, 0);
@@ -324,11 +345,11 @@ public class FourLights extends JPanel implements GLEventListener {
         gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_DIFFUSE, gr, 0);
         gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_SPECULAR, gr, 0);
 
-        float bl[] = {0, 0, 0.5F, 1};
-        float bla[] = {0, 0, 0.1F, 1};
-        gl.glLightfv(GL2.GL_LIGHT3, GL2.GL_AMBIENT, bla, 0);
-        gl.glLightfv(GL2.GL_LIGHT3, GL2.GL_DIFFUSE, bl, 0);
-        gl. glLightfv(GL2.GL_LIGHT3, GL2.GL_SPECULAR, bl, 0);
+        float[] yellow = { 0.7F, 0.7F, 0.0F, 1 }; // changed light to yellow
+        float[] yellowa = { 0.0F, 0.0F, 0.0F, 1 };
+        gl.glLightfv(GL2.GL_LIGHT3, GL2.GL_AMBIENT, yellowa, 0);
+        gl.glLightfv(GL2.GL_LIGHT3, GL2.GL_DIFFUSE, yellow, 0);
+        gl. glLightfv(GL2.GL_LIGHT3, GL2.GL_SPECULAR, yellow, 0);
     }
 
     /**
