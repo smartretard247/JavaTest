@@ -5,8 +5,8 @@
  */
 package Project3;
 
-import JavaTest2.JavaTest;
-import static JavaTest2.JavaTest.makeRandom;
+import JavaTest.JavaTest;
+import static JavaTest.JavaTest.makeRandom;
 
 
 /**
