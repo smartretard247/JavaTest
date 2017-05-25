@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package javatest;
+package JavaTest2;
 
 import FinalProject.Vector;
 import java.io.FileReader;

@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javatest;
+package FourLights;
 
-
- 
- import javax.swing.*;
- 
- public class H2ClassK {
-   String [] sa = {"a", "b", "c"};
-   JComboBox<String> jcbA = new JComboBox<> (sa);
- } // end class H2ClassK
-
+/**
+ *
+ * @author Jeezy
+ */
+public class TestClass {
+  int z = x = 2; // acceptable
+  int x = 2;
+}

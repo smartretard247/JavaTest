@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javatest;
+package JavaTest2;
 
 class Outer_Demo {
    int num;

@@ -1,4 +1,4 @@
-package javatest;
+package JavaTest2;
 
 import java.util.Scanner;
 

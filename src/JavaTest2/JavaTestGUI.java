@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package javatest;
+package JavaTest2;
 
 import FinalProject.GraphUMUC;
 import FinalProject.Vector;
@@ -22,7 +22,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static javatest.JavaTest.makeRandom;
+import static JavaTest2.JavaTest.makeRandom;
 
 /**
  *
